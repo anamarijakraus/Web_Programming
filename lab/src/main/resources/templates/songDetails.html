@@ -1,0 +1,39 @@
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Song Details</title>
+
+</head>
+<body>
+
+<header>
+    <h1>Song title</h1>
+    <div th:text="${song.getTitle()}"></div>
+</header>
+<section>
+    <h2>Genre</h2>
+    <div th:text="${song.getGenre()}"></div>
+    <h2>Year</h2>
+    <div th:text="${song.getReleaseYear()}"></div>
+    <h2>Performers:</h2>
+        <ul th:if="${song.getPerformers().size() != 0}">
+        <li th:each="performer : ${song.getPerformers()}"
+            th:text="${performer.getFirstName()} + ' ' + ${performer.getLastName()}"></li>
+    </ul>
+</section>
+<form th:action="@{'/review/add/{id}' (id=${song.getId()})}" th:method="POST">
+    <h3>Add a review</h3>
+    <input type="text" placeholder="Enter a comment" name="comment">
+    <input type="text" placeholder="Rate out of 5" name="rating">
+    <button type="submit">Add Review</button>
+</form>
+<section>
+    <h2>Reviews:</h2>
+    <th:block th:each="review : ${reviews}">
+        <div th:text="${review.getRating()}+ ' ' + ${review.getComment()}"></div>
+    </th:block>
+</section>
+
+</body>
+</html>

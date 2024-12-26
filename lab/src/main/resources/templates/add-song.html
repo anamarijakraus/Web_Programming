@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Song</title>
+</head>
+<body>
+<h1 th:if="${editSong}">Edit A Song</h1>
+<h1 th:if="${editSong} == null">Add A Song</h1>
+<form th:if="${editSong} == null" action="/songs/add" method="post">
+    <div>
+        <label for="title">Title</label>
+        <input name="title" id="title" required>
+    </div>
+    <div>
+        <label for="trackId">TrackId</label>
+        <input name="trackId" id="trackId" required>
+    </div>
+    <div>
+        <label for="genre">Genre</label>
+        <input name="genre" id="genre" required>
+    </div>
+    <div>
+        <label for="releaseYear">Release Year</label>
+        <input name="releaseYear" id="releaseYear" type="number" required>
+    </div>
+    <div>
+        <label for="albumId">Album: </label>
+        <select name="albumId" id="albumId">
+            <option th:each="album : ${allAlbums}"
+                    th:value="${album.getId()}"
+                    th:text="${album.getName()} + ', ' + ${album.getReleaseYear()}">
+            </option>
+        </select>
+    </div>
+
+    <button>Add</button>
+
+</form>
+
+<form th:if="${editSong}" th:action="@{'/songs/edit/{songId}' (songId=${editSong.getId()})}" method="post">
+    <div>
+        <label for="editTitle">Title</label>
+        <input name="title" id="editTitle" th:value="${editSong.getTitle()}">
+    </div>
+    <div>
+        <label for="editTrackId">TrackId</label>
+        <input name="trackId" id="editTrackId" th:value="${editSong.getTrackId()}">
+    </div>
+    <div>
+        <label for="editGenre">Genre</label>
+        <input name="genre" id="editGenre" th:value="${editSong.getGenre()}">
+    </div>
+    <div>
+        <label for="editReleaseYear">Release Year</label>
+        <input name="releaseYear" id="editReleaseYear" type="number" th:value="${editSong.getReleaseYear()}">
+    </div>
+    <div>
+        <label for="editAlbumId">Album: </label>
+        <select name="albumId" id="editAlbumId">
+            <option th:each="album : ${allAlbums}"
+                    th:value="${album.getId()}"
+                    th:text="${album.getName()} + ', ' + ${album.getReleaseYear()}"
+                    th:selected="${album.getId()} == ${editSong.getAlbumId()}"
+            >
+            </option>
+        </select>
+    </div>
+
+    <button>Edit</button>
+
+</form>
+
+<a href="/songs">All Songs</a>
+
+</body>
+</html>

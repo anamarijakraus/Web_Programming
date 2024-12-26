@@ -1,0 +1,78 @@
+<html xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Songs Homepage - Welcome to My Music Store</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to My Music Store</h1>
+</header>
+<main>
+
+    <div>
+            <span sec:authorize="isAuthenticated()">
+                Hello 
+                <a href="#" class="btn btn-default" sec:authentication="name">
+                </a>
+
+            </span>
+        <br>
+        <span sec:authorize="isAuthenticated()">
+                <a class="btn btn-default" href="/logout">
+                    Logout
+                </a>
+            </span>
+        <span sec:authorize="isAnonymous()">
+                <a class="btn btn-default" href="/login">
+                    Login
+                </a>
+            </span>
+    </div>
+
+    <h2>Choose a song:</h2>
+    <!-- Display radio buttons for each song,
+            the value should be the trackId
+            and the displayed text should be Title: <songTitle>, Genre:<genre>, Release Year: <releaseYear> -->
+
+    <!-- <input type="radio" name="trackId" value="1"> Song 1 <br/>-->
+
+    <form method="POST" action="/artist-form" >
+        <div th:each="song : ${songs}">
+            <input type="radio"
+                   name="trackId"
+
+                   th:value="${song.getTrackId()}" required
+                   th:text="'Title: ' + ${song.getTitle()} + ', Genre: ' + ${song.getGenre()}  + ', Release Year: ' + ${song.getReleaseYear()}  + ', Album: ' + ${song.getAlbum().getName()}"
+            >
+<!--            <label>Rating (1-5):</label>-->
+<!--            <select name="rating" >-->
+<!--                <option value="1">1</option>-->
+<!--                <option value="2">2</option>-->
+<!--                <option value="3">3</option>-->
+<!--                <option value="4">4</option>-->
+<!--                <option value="5">5</option>-->
+<!--            </select>-->
+<!--            <input type="submit" name="submit-rating" value="Submit Rating">-->
+            <br>
+            <a th:href="@{'/songs/edit-form/{id}' (id=${song.getId()})}" sec:authorize="hasRole('ROLE_ADMIN')">Edit</a>
+
+
+            <a th:href="@{'/songs/delete/{songId}' (songId=${song.getId()})}" sec:authorize="hasRole('ROLE_ADMIN')">Delete</a>
+        </div>
+        <input type='submit' value='Submit'>
+    </form>
+
+    <a href="/songs/add-form" sec:authorize="hasRole('ROLE_ADMIN')">Add new Song</a>
+
+    <div th:if="${error != null}" th:text="'Error Orrcured: ' + ${error}">
+    </div>
+
+</main>
+</body>
+</html>
